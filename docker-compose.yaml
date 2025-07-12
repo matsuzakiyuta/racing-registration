@@ -1,0 +1,83 @@
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: racing-registration-app
+        working_dir: /var/www/html
+        volumes:
+            - .:/var/www/html
+            - vendor:/var/www/html/vendor
+            - node_modules:/var/www/html/node_modules
+        ports:
+            - "8000:8000"
+            - "5173:5173"
+        environment:
+            - APP_ENV=local
+            - APP_DEBUG=true
+            - DB_CONNECTION=mysql
+            - DB_HOST=mysql
+            - DB_PORT=3306
+            - DB_DATABASE=racing_registration
+            - DB_USERNAME=user
+            - DB_PASSWORD=password
+        depends_on:
+            - mysql
+        networks:
+            - racing-network
+        restart: unless-stopped
+        entrypoint: ["tail", "-f", "/dev/null"]
+
+    mysql:
+        image: mysql:8.0
+        container_name: racing-registration-mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: rootpassword
+            MYSQL_DATABASE: racing_registration
+            MYSQL_USER: user
+            MYSQL_PASSWORD: password
+        ports:
+            - "3306:3306"
+        volumes:
+            - mysql_data:/var/lib/mysql
+        networks:
+            - racing-network
+        restart: unless-stopped
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: racing-registration-phpmyadmin
+        environment:
+            PMA_HOST: mysql
+            PMA_PORT: 3306
+            PMA_USER: user
+            PMA_PASSWORD: password
+            MYSQL_ROOT_PASSWORD: rootpassword
+        ports:
+            - "8080:80"
+        depends_on:
+            - mysql
+        networks:
+            - racing-network
+        restart: unless-stopped
+
+    redis:
+        image: redis:7-alpine
+        container_name: racing-registration-redis
+        ports:
+            - "6379:6379"
+        volumes:
+            - redis_data:/data
+        networks:
+            - racing-network
+        restart: unless-stopped
+
+volumes:
+    mysql_data:
+    redis_data:
+    vendor:
+    node_modules:
+
+networks:
+    racing-network:
+        driver: bridge
