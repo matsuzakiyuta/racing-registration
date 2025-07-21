@@ -13,6 +13,9 @@
 - サービスクラスは`app/Services`に配置
 - フォームリクエストクラスを使用してバリデーション
 - 例外処理は`app/Exceptions`で管理
+- ドメインクラスは`app/Libs/Domains`に配置
+- ファイルを作成の時は`declare(strict_types=1);`を使用
+- ドメインクラスは必ず`readonly`プロパティを使用し、状態を変更しないようにする
 
 ### TypeScript/React
 - 関数コンポーネントを使用
