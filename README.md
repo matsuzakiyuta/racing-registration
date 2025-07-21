@@ -131,3 +131,14 @@ docker compose logs mysql
 docker compose exec app php artisan tinker
 # Tinker内で: DB::connection()->getPdo();
 ```
+
+## 開発ガイドライン
+
+### コーディング規約
+詳細なコーディングルールは [.github/copilot-instructions.md](.github/copilot-instructions.md) を参照してください。
+
+### 主な規約
+- PHP: PSR-12準拠、Eloquent使用、適切な例外処理
+- TypeScript/React: 関数コンポーネント、型定義必須
+- データベース: マイグレーション適切に管理、外部キー制約設定
+- セキュリティ: 認証・認可の徹底、SQLインジェクション・XSS対策
